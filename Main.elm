@@ -44,7 +44,7 @@ update action model =
 
 model : Model
 model =
-    { rowCount = 20000
+    { rowCount = 1000000
     , colCount = 15
     , cellHeight = 20
     , cellWidth = 100
@@ -68,7 +68,7 @@ view address model =
                 , ( "top", "40px" )
                 , ( "left", "40px" )
                 , ( "right", "40px" )
-                , ( "overflow-x", "hidden" )
+                , ( "overflow", "hidden" )
                 , ( "height", toString (model.height) ++ "px" )
                 ]
 
@@ -76,28 +76,23 @@ view address model =
             style
                 [ ( "height", toString ((model.cellHeight + model.border) * model.rowCount) ++ "px" )
                 ]
+
+        fakeScrollStyle =
+            style
+                [ ( "width", "100%" )
+                , ( "height", "100%" )
+                , ( "position", "relative" )
+                , ( "overflow-x", "hidden" )
+                , ( "z-index", "1" )
+                ]
     in
         div
-            [ containerStyle, on "scroll" scrollTop (Signal.message address << UserScroll) ]
+            [ containerStyle ]
             [ div
-                [ tableContainerStyle ]
-                [ tableView model
-                ]
+                [ fakeScrollStyle, on "scroll" scrollTop (Signal.message address << UserScroll) ]
+                [ div [ tableContainerStyle ] [] ]
+            , tableView model
             ]
-
-
-calculateViewPort model =
-    let
-        startRow = model.scrollTop // (model.cellHeight + model.border)
-
-        offset = model.scrollTop % (model.cellHeight + model.border)
-
-        endRow = startRow + model.height // (model.cellHeight + model.border)
-    in
-        { tableOffset = model.scrollTop - offset
-        , startRow = startRow
-        , endRow = endRow
-        }
 
 
 tableView : Model -> Html
@@ -141,6 +136,15 @@ rowView n model =
             <| List.map (\c -> td [ tdStyle ] [ text ("r" ++ toString (n) ++ " c" ++ toString (c)) ]) [1..model.colCount]
 
 
-targetRows : Model -> List Int
-targetRows model =
-    [1..30]
+calculateViewPort model =
+    let
+        startRow = model.scrollTop // (model.cellHeight + model.border)
+
+        offset = model.scrollTop % (model.cellHeight + model.border)
+
+        endRow = startRow + model.height // (model.cellHeight + model.border)
+    in
+        { tableOffset = 0 - offset
+        , startRow = startRow
+        , endRow = endRow
+        }
