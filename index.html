@@ -10312,7 +10312,7 @@ Elm.Main.make = function (_elm) {
       A2($List.map,
       function (c) {
          return A2($Html.td,
-         _U.list([tdStyle]),
+         _U.list([tdStyle,$Html$Attributes.key($Basics.toString(c))]),
          _U.list([$Html.text(A2($Basics._op["++"],"r",A2($Basics._op["++"],$Basics.toString(n),A2($Basics._op["++"]," c",$Basics.toString(c)))))]));
       },
       _U.range(1,model.colCount)));
