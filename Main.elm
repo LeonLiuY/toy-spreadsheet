@@ -133,7 +133,7 @@ rowView n model =
                 ]
     in
         tr [ key (toString n), trStyle ]
-            <| List.map (\c -> td [ tdStyle ] [ text ("r" ++ toString (n) ++ " c" ++ toString (c)) ]) [1..model.colCount]
+            <| List.map (\c -> td [ tdStyle, key (toString c) ] [ text ("r" ++ toString (n) ++ " c" ++ toString (c)) ]) [1..model.colCount]
 
 
 calculateViewPort model =
